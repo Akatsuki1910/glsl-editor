@@ -1,0 +1,93 @@
+<template lang="pug">
+  div.canvas(ref="can")
+</template>
+
+<script lang="ts">
+import * as THREE from 'three'
+import { Component, Ref, Vue, Watch } from 'nuxt-property-decorator'
+import { GDStore } from '@/store'
+import vertexShader from './glsl/shader.vert'
+// import fragmentShader from './glsl/shader.frag'
+@Component({})
+export default class Editor extends Vue {
+  @Ref() can!: HTMLCanvasElement
+
+  count: number = 0
+  uniforms!: {
+    time: { type: string; value: number }
+    resolution: { type: string; value: THREE.Vector2 }
+  }
+  renderer: any
+  camera: THREE.Camera = new THREE.Camera()
+  scene: THREE.Scene = new THREE.Scene()
+  fragmentShader!: string
+  mesh: THREE.Mesh<THREE.PlaneGeometry, THREE.ShaderMaterial> | undefined
+
+  // computed()
+  get glsldata() {
+    return GDStore.code
+  }
+
+  // watch()
+  @Watch('glsldata')
+  compileGLSL(data: string) {
+    this.fragmentShader = data
+    if (this.mesh !== undefined) this.mesh.remove()
+    const material = new THREE.ShaderMaterial({
+      uniforms: this.uniforms,
+      vertexShader,
+      fragmentShader: this.fragmentShader,
+    })
+    this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material)
+    this.scene.add(this.mesh)
+    this.uniforms.time.value = 0
+  }
+
+  // mounted()
+  mounted() {
+    this.camera.position.z = 1
+
+    this.uniforms = {
+      time: { type: 'f', value: 1.0 },
+      resolution: { type: 'v2', value: new THREE.Vector2() },
+    }
+
+    this.renderer = new THREE.WebGLRenderer()
+    this.renderer.setPixelRatio(
+      window.devicePixelRatio ? window.devicePixelRatio : 1
+    )
+    this.can.appendChild(this.renderer.domElement)
+
+    this.setSize()
+
+    window.onresize = () => {
+      this.setSize()
+    }
+
+    this.animation()
+  }
+
+  // methods()
+  setSize() {
+    this.uniforms.resolution.value.x = window.innerWidth / 2
+    this.uniforms.resolution.value.y = window.innerHeight
+    this.renderer.setSize(
+      this.uniforms.resolution.value.x,
+      this.uniforms.resolution.value.y
+    )
+  }
+
+  animation() {
+    requestAnimationFrame(this.animation)
+    this.uniforms.time.value = this.count / 60
+    this.renderer.render(this.scene, this.camera)
+    this.count++
+  }
+}
+</script>
+
+<style lang="stylus" scoped>
+.canvas
+  height 100%
+  width 100%
+</style>
