@@ -17,7 +17,7 @@ export default class Editor extends Vue {
     time: { type: string; value: number }
     resolution: { type: string; value: THREE.Vector2 }
   }
-  renderer: any
+  renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer()
   camera: THREE.Camera = new THREE.Camera()
   scene: THREE.Scene = new THREE.Scene()
   fragmentShader!: string
@@ -32,7 +32,12 @@ export default class Editor extends Vue {
   @Watch('glsldata')
   compileGLSL(data: string) {
     this.fragmentShader = data
-    if (this.mesh !== undefined) this.mesh.remove()
+    if (this.mesh !== undefined) {
+      this.scene.remove(this.mesh)
+      this.mesh.geometry.dispose()
+      this.mesh.material.dispose()
+      this.mesh = undefined
+    }
     const material = new THREE.ShaderMaterial({
       uniforms: this.uniforms,
       vertexShader,
@@ -52,7 +57,6 @@ export default class Editor extends Vue {
       resolution: { type: 'v2', value: new THREE.Vector2() },
     }
 
-    this.renderer = new THREE.WebGLRenderer()
     this.renderer.setPixelRatio(
       window.devicePixelRatio ? window.devicePixelRatio : 1
     )

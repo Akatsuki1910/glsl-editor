@@ -4,6 +4,7 @@
       .ace(ref="aceEditor")
     .compile-button
       button.btn(@click='compile') compile
+    canvas.e-check(ref="eCheck")
 </template>
 
 <script lang="ts">
@@ -20,8 +21,10 @@ import fragmentShader from './glsl/shader.frag'
 @Component({})
 export default class Editor extends Vue {
   @Ref() aceEditor!: HTMLDivElement
+  @Ref() eCheck!: HTMLCanvasElement
 
   editor!: ace.Ace.Editor
+  gl: WebGLRenderingContext | null = null
 
   // mounted()
   mounted() {
@@ -38,12 +41,29 @@ export default class Editor extends Vue {
     })
 
     this.editor.setValue(fragmentShader)
+    this.editor.gotoLine(1, 0, true)
     this.compile()
   }
 
   // methods()
   compile() {
-    GDStore.setCode(this.editor.getValue())
+    const fs = this.editor.getValue()
+    let canvas: HTMLCanvasElement | undefined = undefined
+    if (!canvas) {
+      canvas = this.eCheck
+    }
+    if (!this.gl) {
+      this.gl = canvas.getContext('webgl')!
+    }
+    const gl = this.gl!
+    const k = gl.createShader(gl.FRAGMENT_SHADER)!
+    gl.shaderSource(k, fs)
+    gl.compileShader(k)
+    if (!gl.getShaderParameter(k, gl.COMPILE_STATUS)) {
+      window.alert(gl.getShaderInfoLog(k))
+    } else {
+      GDStore.setCode(fs)
+    }
   }
 }
 </script>
@@ -62,4 +82,7 @@ export default class Editor extends Vue {
 .compile-button
   height 2rem
   background-color red
+
+.e-check
+  display none
 </style>
