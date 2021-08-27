@@ -6,8 +6,7 @@
 import * as THREE from 'three'
 import { Component, Emit, Ref, Vue, Watch } from 'nuxt-property-decorator'
 import { GDStore } from '@/store'
-import vertexShader from './glsl/shader.vert'
-// import fragmentShader from './glsl/shader.frag'
+import vertexShader from './glsl/shader/shader.vert'
 @Component({})
 export default class Editor extends Vue {
   @Ref() can!: HTMLCanvasElement

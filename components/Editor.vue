@@ -1,70 +1,79 @@
 <template lang="pug">
   div.editor-wrap
     .edi
-      .ace(ref="aceEditor")
+      Ace(ref='shader')
+      Ace(ref='sound')
     .button
       button.btn(@click='compile') compile
       button.btn(@click='repeat') repeat
-    canvas.e-check(ref="eCheck")
+      button.btn(@click='mcompile') mcompile
+      button.btn(:disabled="!mFlag" @click='start') start
 </template>
 
 <script lang="ts">
-import ace from 'ace-builds'
-import 'ace-builds/webpack-resolver'
-import 'ace-builds/src-noconflict/mode-glsl'
-import 'ace-builds/src-noconflict/theme-github'
-import 'ace-builds/src-noconflict/ext-language_tools'
-import 'ace-builds/src-noconflict/ext-elastic_tabstops_lite'
-
 import { Component, Ref, Vue } from 'nuxt-property-decorator'
 import { GDStore } from '@/store'
-import fragmentShader from './glsl/shader.frag'
+import Ace from './Ace.vue'
+import Music from './music'
+import fragmentShader from './glsl/shader/shader.frag'
+import shaderdefinitionShader from './glsl/shader/shaderdefinition.frag'
+import soundShader from './glsl/sound/sound.frag'
+import soundmainShader from './glsl/sound/soundmain.frag'
+import sounddefinitionShader from './glsl/sound/sounddefinition.frag'
 @Component({})
 export default class Editor extends Vue {
-  @Ref() aceEditor!: HTMLDivElement
+  @Ref() shader!: Ace
+  @Ref() sound!: Ace
   @Ref() eCheck!: HTMLCanvasElement
 
-  editor!: ace.Ace.Editor
   gl: WebGLRenderingContext | null = null
+  music = new Music()
+  mFlag = false
 
   // mounted()
   mounted() {
-    this.editor = ace.edit(this.aceEditor, {
-      theme: 'ace/theme/monokai',
-      mode: 'ace/mode/glsl',
-      enableAutoIndent: true,
-    })
-
-    this.editor.setOptions({
-      enableBasicAutocompletion: true,
-      enableSnippets: true,
-      enableLiveAutocompletion: true,
-    })
-
-    this.editor.setValue(fragmentShader)
-    this.editor.gotoLine(1, 0, true)
+    this.shader.setValue(fragmentShader)
+    this.sound.setValue(soundShader)
     this.compile()
   }
 
   // methods()
-  compile() {
-    const fs = this.editor.getValue()
-    let canvas: HTMLCanvasElement | undefined = undefined
-    if (!canvas) {
-      canvas = this.eCheck
+  mcompile() {
+    const ss =
+      sounddefinitionShader + this.sound.editor.getValue() + soundmainShader
+    this.mFlag = this.compileCheck(ss)
+    if (this.mFlag) {
+      this.music.setFrag(ss)
     }
+  }
+  start() {
+    this.music.pp()
+  }
+  compile() {
+    const fs = shaderdefinitionShader + this.shader.editor.getValue()
+    const fFlag = this.compileCheck(fs)
+    if (fFlag) {
+      GDStore.setCode(fs)
+    }
+  }
+
+  compileCheck(s: string) {
+    let rFrag = false
+    let canvas: HTMLCanvasElement = document.createElement('canvas')
     if (!this.gl) {
       this.gl = canvas.getContext('webgl')!
     }
     const gl = this.gl!
     const k = gl.createShader(gl.FRAGMENT_SHADER)!
-    gl.shaderSource(k, fs)
+    gl.shaderSource(k, s)
     gl.compileShader(k)
     if (!gl.getShaderParameter(k, gl.COMPILE_STATUS)) {
       window.alert(gl.getShaderInfoLog(k))
     } else {
-      GDStore.setCode(fs)
+      rFrag = true
     }
+
+    return rFrag
   }
 
   repeat() {
@@ -74,20 +83,13 @@ export default class Editor extends Vue {
 </script>
 
 <style lang="stylus" scoped>
-.ace
-  position relative !important
-  margin auto
-  height 100%
-  width 100%
-
 .edi
   width 50vw
   height calc(100vh - 2rem)
+  display flex
+  flex-direction column
 
 .button
   height 2rem
   background-color red
-
-.e-check
-  display none
 </style>

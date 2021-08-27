@@ -1,9 +1,4 @@
-precision mediump float;
-
-uniform vec2  mouse;
-uniform float time;
-uniform vec2  resolution;
-const float PI = 3.1415926;
+#define PI = 3.1415926;
 
 vec3 hsv(float h, float s, float v){
     vec4 t = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
@@ -12,7 +7,7 @@ vec3 hsv(float h, float s, float v){
 }
 
 void main(){
-	  vec2 p = (gl_FragCoord.xy * 2.0 - resolution) / min(resolution.x, resolution.y);
+    vec2 p = (gl_FragCoord.xy * 2.0 - resolution) / min(resolution.x, resolution.y);
     vec3 line = vec3(0.0);
     for(float fi = 0.0; fi <10.0; ++fi){
         float timer = time * fi * 0.1;
