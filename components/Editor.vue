@@ -2,8 +2,9 @@
   div.editor-wrap
     .edi
       .ace(ref="aceEditor")
-    .compile-button
+    .button
       button.btn(@click='compile') compile
+      button.btn(@click='repeat') repeat
     canvas.e-check(ref="eCheck")
 </template>
 
@@ -65,6 +66,10 @@ export default class Editor extends Vue {
       GDStore.setCode(fs)
     }
   }
+
+  repeat() {
+    this.$nuxt.$emit('repeat', 0)
+  }
 }
 </script>
 
@@ -79,7 +84,7 @@ export default class Editor extends Vue {
   width 50vw
   height calc(100vh - 2rem)
 
-.compile-button
+.button
   height 2rem
   background-color red
 

@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import * as THREE from 'three'
-import { Component, Ref, Vue, Watch } from 'nuxt-property-decorator'
+import { Component, Emit, Ref, Vue, Watch } from 'nuxt-property-decorator'
 import { GDStore } from '@/store'
 import vertexShader from './glsl/shader.vert'
 // import fragmentShader from './glsl/shader.frag'
@@ -28,6 +28,17 @@ export default class Editor extends Vue {
     return GDStore.code
   }
 
+  // created()
+  created() {
+    this.$nuxt.$on('repeat', (data: number) => {
+      this.count = data
+    })
+  }
+
+  beforeDestroy() {
+    this.$nuxt.$off('repeat')
+  }
+
   // watch()
   @Watch('glsldata')
   compileGLSL(data: string) {
@@ -45,7 +56,7 @@ export default class Editor extends Vue {
     })
     this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material)
     this.scene.add(this.mesh)
-    this.uniforms.time.value = 0
+    this.count = 0
   }
 
   // mounted()
