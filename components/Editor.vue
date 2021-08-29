@@ -1,8 +1,8 @@
 <template lang="pug">
-  div.editor-wrap
+  .editor-wrap
     .edi
-      Ace(ref='shader')
-      Ace(ref='sound')
+      Ace(ref="shader")
+      Ace(ref="sound")
     .button
       button.btn(@click='compile') compile
       button.btn(@click='repeat') repeat
@@ -20,7 +20,11 @@ import shaderdefinitionShader from './glsl/shader/shaderdefinition.frag'
 import soundShader from './glsl/sound/sound.frag'
 import soundmainShader from './glsl/sound/soundmain.frag'
 import sounddefinitionShader from './glsl/sound/sounddefinition.frag'
-@Component({})
+@Component({
+  components: {
+    Ace,
+  },
+})
 export default class Editor extends Vue {
   @Ref() shader!: Ace
   @Ref() sound!: Ace
