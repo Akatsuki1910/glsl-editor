@@ -3,13 +3,17 @@
     .edi
       Ace(ref="shader")
       Ace(ref="sound")
-    .button
-      button.btn(@click='compile') compile
-      button.btn(@click='repeat') repeat
-      button.btn(@click='mcompile') mcompile
-      button.btn(:disabled="!mFlag" @click='start') start
+    .btn-wrap
+      button.btn(@click='compile')
+        fa(:icon='faHammer')
+      button.btn(@click='repeat')
+        fa(:icon='faRedo')
+      button.btn(@click='mcompile')
+        fa(:icon='faMusic')
+      button.btn(:disabled="!mFlag" @click='start')
+        fa(:icon='faPlay')
       | BPM
-      input(type="number" min="0" step="1" v-model="bpm")
+      input.bpm(type="number" min="0" step="1" v-model="bpm")
 </template>
 
 <script lang="ts">
@@ -22,6 +26,13 @@ import shaderdefinitionShader from './glsl/shader/shaderdefinition.frag'
 import soundShader from './glsl/sound/sound.frag'
 import soundmainShader from './glsl/sound/soundmain.frag'
 import sounddefinitionShader from './glsl/sound/sounddefinition.frag'
+
+import {
+  faHammer,
+  faRedo,
+  faMusic,
+  faPlay,
+} from '@fortawesome/free-solid-svg-icons'
 @Component({
   components: {
     Ace,
@@ -40,6 +51,22 @@ export default class Editor extends Vue {
   // computed()
   get getBPM() {
     return +this.bpm
+  }
+
+  get faHammer() {
+    return faHammer
+  }
+
+  get faRedo() {
+    return faRedo
+  }
+
+  get faMusic() {
+    return faMusic
+  }
+
+  get faPlay() {
+    return faPlay
   }
 
   @Watch('getBPM')
@@ -109,7 +136,13 @@ export default class Editor extends Vue {
   display flex
   flex-direction column
 
-.button
+.btn-wrap
   height 2rem
-  background-color red
+  background-color #7A7A7A
+
+.btn
+  background-color transparent
+
+.bpm
+  width 4rem
 </style>
