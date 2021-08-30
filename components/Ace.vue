@@ -26,6 +26,8 @@ export default class Ace extends Vue {
       enableAutoIndent: true,
     })
 
+    this.editor.setShowPrintMargin(false)
+
     this.editor.setOptions({
       enableBasicAutocompletion: true,
       enableSnippets: true,
