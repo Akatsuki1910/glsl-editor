@@ -8,10 +8,12 @@
       button.btn(@click='repeat') repeat
       button.btn(@click='mcompile') mcompile
       button.btn(:disabled="!mFlag" @click='start') start
+      | BPM
+      input(type="number" min="0" step="1" v-model="bpm")
 </template>
 
 <script lang="ts">
-import { Component, Ref, Vue } from 'nuxt-property-decorator'
+import { Component, Ref, Vue, Watch } from 'nuxt-property-decorator'
 import { GDStore } from '@/store'
 import Ace from './Ace.vue'
 import Music from './music'
@@ -33,6 +35,19 @@ export default class Editor extends Vue {
   gl: WebGLRenderingContext | null = null
   music = new Music()
   mFlag = false
+  bpm = 60
+
+  // computed()
+  get getBPM() {
+    return +this.bpm
+  }
+
+  @Watch('getBPM')
+  setBPM(bpm: number) {
+    this.music.duration = 60 / bpm
+    this.music.node?.stop()
+    this.mFlag = false
+  }
 
   // mounted()
   mounted() {
@@ -51,6 +66,7 @@ export default class Editor extends Vue {
     }
   }
   start() {
+    this.mFlag = false
     this.music.pp()
   }
   compile() {
