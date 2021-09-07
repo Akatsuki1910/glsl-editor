@@ -4,9 +4,9 @@
 
 <script lang="ts">
 import * as THREE from 'three'
-import { Component, Emit, Ref, Vue, Watch } from 'nuxt-property-decorator'
-import { GDStore } from '@/store'
+import { Component, Ref, Vue, Watch } from 'nuxt-property-decorator'
 import vertexShader from './glsl/shader/shader.vert'
+import { GDStore } from '@/store'
 @Component({})
 export default class Editor extends Vue {
   @Ref() can!: HTMLCanvasElement
@@ -16,6 +16,7 @@ export default class Editor extends Vue {
     time: { type: string; value: number }
     resolution: { type: string; value: THREE.Vector2 }
   }
+
   renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer()
   camera: THREE.Camera = new THREE.Camera()
   scene: THREE.Scene = new THREE.Scene()
@@ -68,7 +69,7 @@ export default class Editor extends Vue {
     }
 
     this.renderer.setPixelRatio(
-      window.devicePixelRatio ? window.devicePixelRatio : 1
+      window.devicePixelRatio ? window.devicePixelRatio : 1,
     )
     this.can.appendChild(this.renderer.domElement)
 
@@ -87,7 +88,7 @@ export default class Editor extends Vue {
     this.uniforms.resolution.value.y = window.innerHeight
     this.renderer.setSize(
       this.uniforms.resolution.value.x,
-      this.uniforms.resolution.value.y
+      this.uniforms.resolution.value.y,
     )
   }
 

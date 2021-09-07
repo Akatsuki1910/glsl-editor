@@ -2,11 +2,31 @@
   "name": "glsl-editor",
   "version": "1.0.0",
   "private": true,
+  "description": "```bash\r # install dependencies\r $ yarn install",
+  "homepage": "https://github.com/Akatsuki1910/glsl-editor#readme",
+  "bugs": {
+    "url": "https://github.com/Akatsuki1910/glsl-editor/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Akatsuki1910/glsl-editor.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "main": "nuxt.config.js",
   "scripts": {
-    "dev": "nuxt",
     "build": "nuxt build",
-    "start": "nuxt start",
-    "generate": "nuxt generate"
+    "dev": "nuxt",
+    "generate": "nuxt generate",
+    "lint": "yarn lint:ts && yarn lint:style",
+    "lint:style": "stylelint \"**/*.{vue,css}\" --ignore-path .gitignore --custom-syntax stylelint-plugin-stylus/custom-syntax",
+    "lint:ts": "eslint --ext \".ts,.vue\" --ignore-path .gitignore .",
+    "prepare": "husky install",
+    "start": "nuxt start"
+  },
+  "lint-staged": {
+    "*.{css,vue}": "yarn lint:style",
+    "*.{ts,vue}": "yarn lint:ts"
   },
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
@@ -17,16 +37,30 @@
     "raw-loader": "^4.0.2"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.15.4",
     "@nuxt/types": "^2.15.8",
     "@nuxt/typescript-build": "^2.1.0",
+    "@nuxtjs/eslint-config-typescript": "^6.0.1",
+    "@nuxtjs/eslint-module": "^3.0.2",
     "@nuxtjs/pwa": "^3.3.5",
+    "@nuxtjs/stylelint-module": "^4.0.0",
     "@types/three": "^0.131.0",
+    "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
+    "eslint-loader": "^4.0.2",
+    "eslint-plugin-nuxt": "^2.0.0",
+    "eslint-plugin-vue": "^7.17.0",
+    "husky": "^7.0.2",
+    "lint-staged": "^11.1.2",
     "nuxt-property-decorator": "^2.9.1",
     "prettier": "^2.3.2",
     "pug": "3.0.2",
     "pug-loader": "^2.4.0",
     "pug-plain-loader": "^1.1.0",
+    "stylelint": "^13.13.1",
+    "stylelint-config-prettier": "^8.0.2",
+    "stylelint-config-standard": "^22.0.0",
+    "stylelint-plugin-stylus": "^0.11.0",
     "stylus": "^0.55.0",
     "stylus-loader": "4.3.3",
     "three": "^0.132.2"

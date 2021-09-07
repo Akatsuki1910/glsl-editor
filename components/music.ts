@@ -41,7 +41,7 @@ export default class Music {
     this.audioBuffer = ctx.createBuffer(
       2,
       ctx.sampleRate * this.duration,
-      ctx.sampleRate
+      ctx.sampleRate,
     )
 
     const uniforms = {
@@ -71,7 +71,7 @@ export default class Music {
         this.height,
         this.wctx.RGBA,
         this.wctx.UNSIGNED_BYTE,
-        pixels
+        pixels,
       )
 
       // Convert pixels to samples

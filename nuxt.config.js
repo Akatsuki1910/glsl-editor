@@ -46,6 +46,8 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/typescript
     '@nuxt/typescript-build',
+    // https://go.nuxtjs.dev/stylelint
+    '@nuxtjs/stylelint-module',
     '@nuxtjs/pwa',
   ],
 
@@ -53,18 +55,36 @@ export default {
   modules: [
     ['nuxt-fontawesome', {
       component: 'fa',
-    }]
+    }],
+    '@nuxtjs/google-gtag',
   ],
+
+  'google-gtag': {
+    id: 'UA-180940278-2',
+    debug: true,
+  },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    extend(config, ctx) {
-      if (!!config.module) {
+    extend(config) {
+      if (config.module) {
         config.module.rules.push({
           test: /\.(vert|frag)$/i,
           use: ["raw-loader"]
         });
       }
+    }
+  },
+
+  extend(config, ctx) {
+    // Run ESLint on save
+    if (ctx.isDev && ctx.isClient) {
+      config.module.rules.push({
+        enforce: 'pre',
+        test: /\.(js|vue|ts)$/,
+        loader: 'eslint-loader',
+        exclude: /(node_modules)/
+      })
     }
   }
 }

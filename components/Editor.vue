@@ -18,7 +18,12 @@
 
 <script lang="ts">
 import { Component, Ref, Vue, Watch } from 'nuxt-property-decorator'
-import { GDStore } from '@/store'
+import {
+  faHammer,
+  faRedo,
+  faMusic,
+  faPlay,
+} from '@fortawesome/free-solid-svg-icons'
 import Ace from './Ace.vue'
 import Music from './music'
 import fragmentShader from './glsl/shader/shader.frag'
@@ -26,13 +31,8 @@ import shaderdefinitionShader from './glsl/shader/shaderdefinition.frag'
 import soundShader from './glsl/sound/sound.frag'
 import soundmainShader from './glsl/sound/soundmain.frag'
 import sounddefinitionShader from './glsl/sound/sounddefinition.frag'
+import { GDStore } from '@/store'
 
-import {
-  faHammer,
-  faRedo,
-  faMusic,
-  faPlay,
-} from '@fortawesome/free-solid-svg-icons'
 @Component({
   components: {
     Ace,
@@ -92,10 +92,12 @@ export default class Editor extends Vue {
       this.music.setFrag(ss)
     }
   }
+
   start() {
     this.mFlag = false
     this.music.pp()
   }
+
   compile() {
     const fs = shaderdefinitionShader + this.shader.editor.getValue()
     const fFlag = this.compileCheck(fs)
@@ -106,7 +108,7 @@ export default class Editor extends Vue {
 
   compileCheck(s: string) {
     let rFrag = false
-    let canvas: HTMLCanvasElement = document.createElement('canvas')
+    const canvas: HTMLCanvasElement = document.createElement('canvas')
     if (!this.gl) {
       this.gl = canvas.getContext('webgl')!
     }
