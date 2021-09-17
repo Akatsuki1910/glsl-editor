@@ -131,20 +131,24 @@ export default class Editor extends Vue {
 }
 </script>
 
-<style lang="stylus" scoped>
-.edi
-  width 50vw
-  height calc(100vh - 2rem)
-  display flex
-  flex-direction column
+<style lang="scss" scoped>
+.edi {
+  display: flex;
+  flex-direction: column;
+  width: 50vw;
+  height: calc(100vh - 2rem);
+}
 
-.btn-wrap
-  height 2rem
-  background-color #7A7A7A
+.btn-wrap {
+  height: 2rem;
+  background-color: #7a7a7a;
+}
 
-.btn
-  background-color transparent
+.btn {
+  background-color: transparent;
+}
 
-.bpm
-  width 4rem
+.bpm {
+  width: 4rem;
+}
 </style>

@@ -101,8 +101,9 @@ export default class Editor extends Vue {
 }
 </script>
 
-<style lang="stylus" scoped>
-.canvas
-  height 100%
-  width 100%
+<style lang="scss" scoped>
+.canvas {
+  width: 100%;
+  height: 100%;
+}
 </style>

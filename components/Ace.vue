@@ -43,10 +43,11 @@ export default class Ace extends Vue {
 }
 </script>
 
-<style lang="stylus" scoped>
-.ace
-  position relative !important
-  margin auto
-  height 100%
-  width 100%
+<style lang="scss" scoped>
+.ace {
+  position: relative !important;
+  width: 100%;
+  height: 100%;
+  margin: auto;
+}
 </style>

@@ -2,11 +2,15 @@
   Nuxt
 </template>
 
-<style lang="stylus">
-html, body, #__nuxt, #__layout, #__layout > div{
+<style lang="scss">
+html,
+body,
+#__nuxt,
+#__layout,
+#__layout > div {
   height: 100%;
 }
-body{
+body {
   margin: 0;
 }
 </style>
